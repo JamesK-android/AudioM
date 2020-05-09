@@ -131,7 +131,6 @@ public class Ui {
                     break;
                 case TOTALDURATION:
                     System.out.println("Total durations is: " + listoffiles.totalDuration() + " milisecont" );
-                    listoffiles.totalDuration();
                     break;
             }
         }while (choice != Choice.EXIT);
