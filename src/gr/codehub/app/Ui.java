@@ -1,5 +1,7 @@
 package gr.codehub.app;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Ui {
@@ -13,17 +15,19 @@ public class Ui {
             choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    return Choice.AUDIOFILE;
+                    return Choice.CREATE;
                 case 2:
-                    return Choice.VIDEOFILE;
-                case 3:
                     return Choice.DISPLAY;
-                case 4:
+                case 3:
                     return Choice.SAVE;
+                case 4:
+                    return Choice.LOAD;
                 case 5:
-                    return Choice.LOAD1;
+                    return Choice.SEARCH;
                 case 6:
-                    return Choice.LOAD2;
+                    return Choice.REMOVE;
+                case 7:
+                    return Choice.TOTALDURATION;
                 case 0:
                     return Choice.EXIT;
                 default:
@@ -34,93 +38,100 @@ public class Ui {
         }
     }
 
-    public AudioFile createAudioFile() {
+    public MediaFile createFile() {
         int id;
         String filename;
-        String duration;
-        String dateofrecord;
+        long duration;
+        Date dateofrecord = null;
         String description;
         String filetype;
+        MediaFile newrecord;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Give the customer id");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Give the file id");
         id = scanner.nextInt();
         System.out.println("Give the file name");
         filename = scanner.next();
         System.out.println("Give the duration");
-        duration = scanner.next();
-        System.out.println("Give the date of record");
-        dateofrecord = scanner.next();
+        duration = scanner.nextLong();
+        System.out.println("Give the date of record in the form of dd/mm/yyyy");
+        String givendate = scanner.next();
+
+        try {
+            dateofrecord = dateFormat.parse(givendate);
+        } catch (Exception e) {
+        }
+        System.out.println(dateofrecord);
+
         System.out.println("Give description");
-        description = scanner.next();
+        description = sc.nextLine();
         System.out.println("Give the file type");
-        filetype = scanner.next();
+        int i;
+        do {
+            System.out.println("1.avi" + "  2.wmv" + " 3.mp4" + "   4.mp3" + "  5.wav" + "  6.wma");
+            i = scanner.nextInt();
+        }while (i <= 0 || i > 6);
+        if(i == 1){
+            filetype = "avi";
+            newrecord = new VideoFile(id, filename, duration,dateofrecord, description, filetype);
+        }else if(i ==2){
+            filetype = "wmv";
+            newrecord = new VideoFile(id, filename, duration, dateofrecord, description, filetype);
+        }else if(i == 3){
+            filetype = "mp4";
+            newrecord = new VideoFile(id, filename, duration, dateofrecord, description, filetype);
+        }else if(i == 4) {
+            filetype = "mp3";
+            newrecord = new AudioFile(id, filename, duration, dateofrecord, description, filetype);
+        }else if(i == 5){
+            filetype = "wav";
+            newrecord = new AudioFile(id, filename, duration, dateofrecord, description, filetype);
+        }else{
+            filetype = "wma";
+            newrecord = new AudioFile(id, filename, duration, dateofrecord, description, filetype);
+        }
 
-
-        AudioFile a1 = new AudioFile(1, filename, duration, dateofrecord, description, filetype);
-
-        return a1;
-    }
-
-    public VideoFile createVideoFile() {
-        int id;
-        String filename;
-        String duration;
-        String dateofrecord;
-        String description;
-        String filetype;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Give the customer id");
-        id = scanner.nextInt();
-        System.out.println("Give the file name");
-        filename = scanner.next();
-        System.out.println("Give the duration");
-        duration = scanner.next();
-        System.out.println("Give the date of record");
-        dateofrecord = scanner.next();
-        System.out.println("Give description");
-        description = scanner.next();
-        System.out.println("Give the file type");
-        filetype = scanner.next();
-
-
-        VideoFile v1 = new VideoFile(1, filename, duration, dateofrecord, description, filetype);
-
-        return v1;
+        return newrecord;
     }
 
 
     public void manageAllFiles(AllFiles listoffiles) {
         Choice choice;
         do {
-            System.out.println("1. Add Audio File   2. Add Video File" + "  3.Display " + " 4.Save to file"
-                    + " 5.Load video file" + "  6.Load audio file" +"  0. Exit");
+            System.out.println("1. Add a file" + "\t2.Display " + "\t3.Save to file"
+                    + "\t4.Load from file" + "\t5.Search for file" + "\t6.Remove Media file " + "\t7.Print total duration" +"\t0. Exit");
             choice = menu();
 
             switch (choice) {
-                case AUDIOFILE:
-                AudioFile ad = createAudioFile();
+                case CREATE:
+                MediaFile ad = createFile();
                 listoffiles.addFile(ad);
-                    break;
-                case VIDEOFILE:
-                    VideoFile av = createVideoFile();
-                    listoffiles.addFile(av);
                     break;
                 case DISPLAY:
                     listoffiles.displayFiles();
+                    System.out.println("Number of files: "+listoffiles.displaynumoffiles());
                     break;
                 case SAVE:
                     listoffiles.savetolist("media.txt");
                     break;
-                case LOAD1:
-                    listoffiles.loadaudiofromlist("media.txt");
+                case LOAD:
+                    listoffiles.loadfromlist("media.txt");
+                    System.out.println("Number of files loaded: "+listoffiles.displaynumoffiles());
                     break;
-                case LOAD2:
-                    listoffiles.loadvideofromlist("media.txt");
+                case SEARCH:
+                    listoffiles.SearchFile();
                     break;
                 case ERROR:
                     System.out.println("You gave erroneous input");
+                    break;
+                case REMOVE:
+                    listoffiles.removeMedia();
+                    break;
+                case TOTALDURATION:
+                    System.out.println("Total durations is: " + listoffiles.totalDuration() + " milisecont" );
+                    listoffiles.totalDuration();
                     break;
             }
         }while (choice != Choice.EXIT);

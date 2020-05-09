@@ -1,13 +1,21 @@
 package gr.codehub.app;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public abstract class MediaFile {
     private int id;
     private String filename;
-    private String duration;
-    private String dateofrecord;
+    private long duration;
+    private Date dateofrecord;
     private String description;
+    private String filetype;
 
-    public MediaFile(int id, String filename, String duration, String dateofrecord, String description) {
+    public String getFiletype() {
+        return filetype;
+    }
+
+    public MediaFile(int id, String filename, long duration, Date dateofrecord, String description) {
         this.id = id;
         this.filename = filename;
         this.duration = duration;
@@ -23,11 +31,11 @@ public abstract class MediaFile {
         return filename;
     }
 
-    public String getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public String getDateofrecord() {
+    public Date getDateofrecord() {
         return dateofrecord;
     }
 
@@ -37,11 +45,12 @@ public abstract class MediaFile {
 
     @Override
     public String toString() {
-        return "AudioFile{" +
+        SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/YYYY");
+        return "{" +
                 "id=" + id +
                 ", filename='" + filename + '\'' +
                 ", duration='" + duration + '\'' +
-                ", dateofrecord=" + dateofrecord +
+                ", dateofrecord=" + dateformat.format(dateofrecord) +
                 ", description='" + description + '\'' +
                 '}';
     }

@@ -1,12 +1,13 @@
 package gr.codehub.app;
 
 public enum Choice {
-    AUDIOFILE,
-    VIDEOFILE,
+    CREATE,
     ERROR,
     EXIT,
     DISPLAY,
     SAVE,
-    LOAD1,
-    LOAD2
+    LOAD,
+    SEARCH,
+    REMOVE,
+    TOTALDURATION
 }
